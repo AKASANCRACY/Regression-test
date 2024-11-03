@@ -4,34 +4,35 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/java
 
 trigger:
-branches:
-include:
--main
-paths:
-include:
--petstore/petstoreautomation/*
+  branches:
+    include:
+    - main
+  paths:
+    include:
+    - petstore/petstoreautomation/*
+
 resources:
 - repo: self
+
 stages:
-stage: Build
-displayName: Build & Test Stage
-jobs:
--job: Automation
-displayName: Build & Execute Automated Regression Tests
-pool:
-vmImage: ubuntu-latest'
-steps:
--task: Maven23.
-continueonError: true
-displayName: Build & Execute Automated Regression Tests
-inputs:
-mavenPomFile: 'petstore/petstoreautomation/pom.xml
-mavenOptions: -Xmx3072m*
-javaHomeOption: 'JDKVersion'
-jdkversionoption: '8'
-jdkArchitectureOption: 'x64'
-publishJUnitResults: true
-testResultsFiles: 'petstore/petstoreautomation/target/surefire-reports/TEST-.xml
-codeCoverageTool0ption: '
-jacoco
-goals: 'package'
+- stage: Build
+  displayName: Build & Test Stage
+  jobs: 
+  - job: Automation
+    displayName: Build & Execute Automated Regression Tests
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+    - task: Maven@3
+      continueOnError: true 
+      displayName: Build & Execute Automated Regression Tests
+      inputs:
+        mavenPomFile: 'petstore/petstoreautomation/pom.xml'
+        mavenOptions: '-Xmx3072m'
+        javaHomeOption: 'JDKVersion'
+        jdkVersionOption: '8'
+        jdkArchitectureOption: 'x64'
+        publishJUnitResults: true
+        testResultsFiles: 'petstore/petstoreautomation/target/surefire-reports/TEST-*.xml'
+        codeCoverageToolOption: 'jaCoCo'
+        goals: 'package'
